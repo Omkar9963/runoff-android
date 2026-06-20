@@ -1,0 +1,11 @@
+{
+  "appId": "io.github.omkar9963.runoff",
+  "appName": "Runoff DSS",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
