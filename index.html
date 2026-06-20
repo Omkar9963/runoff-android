@@ -220,6 +220,22 @@
   .cwfoot input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(34,184,196,.18)}
   .cwfoot button{width:48px;border:0;border-radius:12px;background:var(--grad);color:#fff;font-size:17px;cursor:pointer}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* mobile / app layout: stack the sidebar over the map */
+  @media (max-width: 760px){
+    .app{flex-direction:column;height:auto;min-height:100vh}
+    .rail{width:100%;min-width:0;height:auto;max-height:none;overflow:visible}
+    .stage{position:relative;width:100%;height:70vh;min-height:420px;flex:none}
+    #map{position:absolute;inset:0}
+    .readouts{grid-template-columns:1fr 1fr}
+    .logobadge{height:54px;padding:7px}
+    .chartwrap{height:240px}
+    .legend .sw{width:20px}
+  }
+  @media (max-width: 420px){
+    .stage{height:62vh;min-height:340px}
+    .railhead .wm{font-size:21px}
+  }
 </style>
 </head>
 <body>
@@ -694,6 +710,10 @@ $('csv').addEventListener('click',()=>{if(!lastSeries||!lastSeries.length)return
   a.href=url;a.download=(lastArea||'daily').replace(/[^\w]+/g,'_')+'_daily.csv';a.click();URL.revokeObjectURL(url);});
 
 initMap();loadStates();
+
+  window.addEventListener('load',function(){setTimeout(function(){try{map.invalidateSize();}catch(e){}},300);});
+  window.addEventListener('resize',function(){try{map.invalidateSize();}catch(e){}});
+  window.addEventListener('orientationchange',function(){setTimeout(function(){try{map.invalidateSize();}catch(e){}},400);});
 </script>
 </body>
 </html>
