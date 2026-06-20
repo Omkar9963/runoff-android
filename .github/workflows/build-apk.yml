@@ -24,9 +24,23 @@ jobs:
           java-version: '21'
 
       - name: Install Capacitor
-        run: npm install
+        run: npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
 
-      - name: Add Android platform
+      # build www BEFORE adding android, so cap sync finds the web assets
+      - name: Assemble www
+        run: |
+          mkdir -p www
+          cp index.html www/
+          cp logo.svg www/ 2>/dev/null || true
+          cp tnau.jpeg www/ 2>/dev/null || true
+          cp icar-iiwm.jpeg www/ 2>/dev/null || true
+          cp icon-192.png www/ 2>/dev/null || true
+          cp icon-512.png www/ 2>/dev/null || true
+          echo "www contents:"
+          ls -la www
+          test -f www/index.html || (echo "ERROR: www/index.html missing" && exit 1)
+
+      - name: Add Android platform and sync
         run: |
           npx cap add android
           npx cap sync android
@@ -35,7 +49,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
